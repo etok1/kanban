@@ -51,8 +51,7 @@ export function InProgress({ tasks, onAddTask }) {
     return <div>No tasks</div>;
   }
   return (
-    <TaskOutlet>
-      <h2>InProgress</h2>
+    <TaskOutlet heading="InProgress">
       <div className="tasks">
         {tasks.map((task) => (
           <Task onClick={() => handleTaskClick(task.id)} key={task.id}>

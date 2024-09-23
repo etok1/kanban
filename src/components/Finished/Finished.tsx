@@ -51,8 +51,7 @@ export function Finished({ tasks, onAddTask }) {
     return <div>No tasks</div>;
   }
   return (
-    <TaskOutlet>
-      <h2>Finished</h2>
+    <TaskOutlet heading="Finished">
       <div className="tasks">
         {tasks.map((task) => (
           <Task onClick={() => handleTaskClick(task.id)} key={task.id}>

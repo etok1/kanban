@@ -50,8 +50,7 @@ export function Ready({ tasks, onAddTask }) {
   }
 
   return (
-    <TaskOutlet>
-      <h2>Ready</h2>
+    <TaskOutlet heading="Ready">
       <div className="tasks">
         {tasks.map((task) => (
           <Task onClick={() => handleTaskClick(task.id)} key={task.id}>

@@ -49,8 +49,7 @@ export function Backlog({ tasks, onAddTask }) {
   }
 
   return (
-    <TaskOutlet>
-      <h2>Backlog</h2>
+    <TaskOutlet heading="Backlog">
       <div className="tasks">
         {tasks.map((task) => (
           <Task onClick={() => handleTaskClick(task.id)} key={task.id}>

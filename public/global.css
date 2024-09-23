@@ -1,0 +1,50 @@
+:root {
+  /* colors */
+  --white: #fff;
+  --grey: #dfdfdf;
+  --black: #000;
+  --blue-bg: #0079bf;
+  --dark-blue: #0067a3;
+  --btn-blue: #002e49;
+  --blue-disabled: #4597c7;
+}
+
+* {
+  border: none;
+  outline: none;
+}
+
+.buttons {
+  cursor: pointer;
+  background-color: var(--blue-bg);
+  color: var(--btn-blue);
+  padding: 7px 25px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+
+.buttons:disabled {
+  background-color: var(--blue-disabled);
+  color: var(--blue-bg);
+}
+
+textarea {
+  background-color: var();
+  padding: 10px 20px;
+  width: 85%;
+  border-bottom: 1px solid var(--black);
+}
+
+input {
+  width: 85%;
+  border-bottom: 1px solid var(--black);
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+.tasks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}

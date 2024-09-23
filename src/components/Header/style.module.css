@@ -1,12 +1,22 @@
 .header {
-  padding: 15px 20px;
-  width: 100%;
-  background-color: #0067a3;
+  padding: 15px 50px;
+  background-color: var(--dark-blue);
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 
 .header h1 {
-  color: white;
+  color: var(--white);
+}
+
+@media (max-width: 338px) {
+  .header {
+    background-color: var(--dark-blue);
+    align-items: flex-end;
+    justify-content: end;
+  }
+  .header h1 {
+    display: none;
+  }
 }

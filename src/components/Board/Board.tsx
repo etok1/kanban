@@ -1,17 +1,28 @@
 import React, { useEffect, useState } from "react";
 import style from "./style.module.css";
+
 import { Backlog } from "../Backlog/Backlog.tsx";
 import { Ready } from "../Ready/Ready.tsx";
+import { InProgress } from "../InProgress/InProgress.tsx";
+import { Finished } from "../Finished/Finished.tsx";
 
-type Tasks = {
-  backlog: string[];
-  ready: string[];
-  inProgress: string[];
-  finished: string[];
+export type Task = { id: string; name: string; description: string };
+
+export type Tasks = {
+  backlog: Task[];
+  ready: Task[];
+  inProgress: Task[];
+  finished: Task[];
 };
+
 const allTasks: Tasks = {
-  backlog: ["Task1", "Task 2"],
-  ready: ["go about the world like im having fun"],
+  backlog: [
+    { id: "1", name: "Task 1", description: "lorem" },
+    { id: "2", name: "Task 2", description: "There is only one word" },
+  ],
+  ready: [
+    { id: "3", name: "Finish this project", description: "react project" },
+  ],
   inProgress: [],
   finished: [],
 };
@@ -24,14 +35,17 @@ const loadTasks = () => {
 export function Board() {
   const [tasks, setTasks] = useState<Tasks>(loadTasks);
 
-  const onAddTask = (from, to, task) => {
+  const onAddTask = (from: keyof Tasks, to: keyof Tasks, task: Task) => {
     setTasks((prev) => ({
       ...prev,
-      [from]: prev[from].filter((t) => t !== task),
+      [from]: prev[from].filter((t) => t.id !== task.id),
       [to]: [...prev[to], task],
     }));
-    localStorage.setItem("kanbanTasks", JSON.stringify(tasks));
   };
+
+  useEffect(() => {
+    localStorage.setItem("kanbanTasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   useEffect(() => {
     const allTasks = loadTasks();
@@ -42,6 +56,8 @@ export function Board() {
     <div className={style.board}>
       <Backlog tasks={tasks.backlog} onAddTask={onAddTask} />{" "}
       <Ready tasks={tasks.ready} onAddTask={onAddTask} />
+      <InProgress tasks={tasks.inProgress} onAddTask={onAddTask} />{" "}
+      <Finished tasks={tasks.finished} onAddTask={onAddTask} />
     </div>
   );
 }

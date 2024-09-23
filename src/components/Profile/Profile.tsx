@@ -9,7 +9,7 @@ export function Profile() {
   const [menu, setMenu] = useState(false);
 
   const handle = () => {
-    setMenu(!menu);
+    setMenu((prevMenu) => !prevMenu);
   };
 
   return (

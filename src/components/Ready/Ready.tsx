@@ -1,13 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Task } from "../Task/Task.tsx";
 import { TaskOutlet } from "../TaskOutlet/TaskOutlet.tsx";
-import style from "./style.module.css";
 import { AddCard } from "../AddCard/AddCard.tsx";
 import { Dropdown } from "../Dropdown/Dropdown.tsx";
+import { Tasks } from "../Board/Board.tsx";
 
 export function Ready({ tasks, onAddTask }) {
+  const navigate = useNavigate();
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [info, setInfo] = useState<string[]>([]);
+  const [info, setInfo] = useState<Tasks>({
+    backlog: [],
+    ready: [],
+    inProgress: [],
+    finished: [],
+  });
+
+  const handleTaskClick = (taskId) => {
+    navigate(`/task/${taskId}`);
+  };
 
   const loadTasks = () => {
     const tasks = localStorage.getItem("kanbanTasks");
@@ -16,33 +28,47 @@ export function Ready({ tasks, onAddTask }) {
 
   const newTaskHandle = (task) => {
     onAddTask("backlog", "ready", task);
-
     setDropdownOpen(false);
+    setInfo((prevInfo) => ({
+      backlog: prevInfo.backlog.filter((t) => t.id !== task.id),
+      ready: [
+        ...prevInfo.ready,
+        { id: task.id, name: task.name, description: task.description },
+      ],
+      ...prevInfo,
+    }));
+    console.log(info);
   };
 
-  useEffect(() => {
+  const loadTasksArray = useCallback(() => {
     const allTasks = loadTasks();
-    console.log("Loaded tasks:", allTasks.backlog);
-    setInfo(allTasks.backlog);
+    setInfo(allTasks);
   }, []);
 
   if (!Array.isArray(tasks)) {
     return <div>No tasks</div>;
   }
+
   return (
     <TaskOutlet>
       <h2>Ready</h2>
-      <div className={style.tasks}>
+      <div className="tasks">
         {tasks.map((task) => (
-          <Task>{task}</Task>
+          <Task onClick={() => handleTaskClick(task.id)} key={task.id}>
+            {task.name}
+          </Task>
         ))}
-        {dropdownOpen && <Dropdown tasksList={info} addTask={newTaskHandle} />}
-        <AddCard
-          onClick={() => {
-            console.log("ready");
-            setDropdownOpen(true);
-          }}
-        />
+        {dropdownOpen && (
+          <Dropdown tasksList={info.backlog} addTask={newTaskHandle} />
+        )}
+        {!dropdownOpen && (
+          <AddCard
+            onClick={() => {
+              loadTasksArray();
+              setDropdownOpen(true);
+            }}
+          />
+        )}
       </div>{" "}
     </TaskOutlet>
   );

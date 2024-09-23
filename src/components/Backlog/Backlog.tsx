@@ -1,17 +1,50 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Task } from "../Task/Task.tsx";
 import { TaskOutlet } from "../TaskOutlet/TaskOutlet.tsx";
-import style from "./style.module.css";
 import { AddCard } from "../AddCard/AddCard.tsx";
 
 export function Backlog({ tasks, onAddTask }) {
-  const [input, setInput] = useState(false);
-  const [btn, setBtn] = useState(false);
-  const [newTask, setNewTask] = useState("");
+  const navigate = useNavigate();
+
+  const [input, setInput] = useState<boolean>(false);
+  const [btn, setBtn] = useState<boolean>(false);
+  const [isBtnActive, setIsBtnActive] = useState<boolean>(true);
+  const [newTask, setNewTask] = useState({} || null);
+
+  const handleTaskClick = (taskId) => {
+    navigate(`/task/${taskId}`);
+  };
+
+  const generateTaskId = () => {
+    return Date.now() + Math.random().toString(36).substring(2, 9);
+  };
 
   const newTaskHandle = () => {
-    onAddTask("backlog", "backlog", newTask);
+    const taskId = generateTaskId();
+    const taskObject = { id: taskId, name: newTask, description: "" };
+    onAddTask("backlog", "backlog", taskObject);
     setNewTask("");
+    setInput(false);
+    setBtn(false);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    const trimmedValue = value.trim();
+
+    setNewTask((prevTask) => ({
+      ...prevTask,
+      [name]: value,
+    }));
+
+    setBtn(true);
+
+    if (trimmedValue) {
+      setIsBtnActive(true);
+    } else {
+      setIsBtnActive(false);
+    }
   };
 
   if (!Array.isArray(tasks)) {
@@ -21,33 +54,27 @@ export function Backlog({ tasks, onAddTask }) {
   return (
     <TaskOutlet>
       <h2>Backlog</h2>
-      <div className={style.tasks}>
+      <div className="tasks">
         {tasks.map((task) => (
-          <Task>{task}</Task>
+          <Task onClick={() => handleTaskClick(task.id)} key={task.id}>
+            {task.name}
+          </Task>
         ))}
-
-        {input ? (
-          <input
-            className={style.input}
-            type="text"
-            onChange={(e) => {
-              setBtn(true);
-              setNewTask(e.target.value);
-            }}
-          />
-        ) : (
-          ""
-        )}
-        {btn ? (
+        {input ? <input type="text" onChange={handleInputChange} /> : ""}
+        {btn && (
           <button
-            disabled={!btn}
+            disabled={!isBtnActive}
             onClick={() => {
-              newTaskHandle();
+              if (newTask !== "") {
+                newTaskHandle();
+              }
             }}
+            className="buttons"
           >
             Submit
           </button>
-        ) : (
+        )}{" "}
+        {!input && (
           <AddCard
             onClick={() => {
               setInput(true);

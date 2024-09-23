@@ -10,7 +10,7 @@ export function Backlog({ tasks, onAddTask }) {
   const [input, setInput] = useState<boolean>(false);
   const [btn, setBtn] = useState<boolean>(false);
   const [isBtnActive, setIsBtnActive] = useState<boolean>(true);
-  const [newTask, setNewTask] = useState({} || null);
+  const [newTask, setNewTask] = useState("" || null);
 
   const handleTaskClick = (taskId) => {
     navigate(`/task/${taskId}`);
@@ -30,19 +30,16 @@ export function Backlog({ tasks, onAddTask }) {
   };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    const trimmedValue = value.trim();
+    const name = e.target.value;
+    const trimmedValue = name.trim();
 
-    setNewTask((prevTask) => ({
-      ...prevTask,
-      [name]: value,
-    }));
-
+    setNewTask(trimmedValue);
     setBtn(true);
 
     if (trimmedValue) {
       setIsBtnActive(true);
     } else {
+      setBtn(false);
       setIsBtnActive(false);
     }
   };
@@ -65,9 +62,7 @@ export function Backlog({ tasks, onAddTask }) {
           <button
             disabled={!isBtnActive}
             onClick={() => {
-              if (newTask !== "") {
-                newTaskHandle();
-              }
+              newTaskHandle();
             }}
             className="buttons"
           >

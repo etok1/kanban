@@ -24,8 +24,8 @@ export default function TaskDetails() {
     };
 
     const findTask = (tasks) => {
-      for (const category of Object.values(tasks)) {
-        const foundTask = category.find((task) => task.id === taskId);
+      for (const part of Object.values(tasks)) {
+        const foundTask = part.find((task) => task.id === taskId);
         if (foundTask) return foundTask;
       }
     };
